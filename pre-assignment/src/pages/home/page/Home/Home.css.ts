@@ -6,6 +6,6 @@ export const home = style({
   fontSize: '1.6rem',
   backgroundColor: globalTheme.color.green,
   width: '100%',
-  height: '100%',
+  height: '100dvh',
   border: '1px solid',
 });

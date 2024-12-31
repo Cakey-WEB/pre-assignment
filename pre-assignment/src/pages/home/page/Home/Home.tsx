@@ -1,7 +1,13 @@
-import { home } from '@pages/home/page/Home/Home.css';
+import BaseLayer from '@pages/home/components/BaseLayer';
+import BottomSheet from '@pages/home/components/BottomSheet';
 
 const Home = () => {
-  return <div className={home}>Home</div>;
+  return (
+    <>
+      <BaseLayer />
+      <BottomSheet />
+    </>
+  );
 };
 
 export default Home;
