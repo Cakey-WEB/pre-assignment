@@ -1,4 +1,4 @@
-import { wrapper } from '@pages/home/components/BottomSheet.css';
+import { noTransition, withTransition, wrapper } from '@pages/home/components/BottomSheet.css';
 import BottomSheetContent from '@pages/home/components/BottomSheetContent';
 import BottomSheetHeader from '@pages/home/components/BottomSheetHeader';
 import { useEffect, useRef, useState } from 'react';
@@ -14,13 +14,9 @@ interface BottomSheetMetrics {
   };
 }
 
-export const MIN_Y = 60; // 바텀시트가 최대로 높이 올라갔을 때의 y 값
-export const MAX_Y = window.innerHeight - 80; // 바텀시트가 최소로 내려갔을 때의 y 값
-
 const BottomSheet = () => {
   const [bottomSheetHeight, setBottomSheetHeight] = useState('67px');
-  // top = 35rem, center =20rem, bottom = 1rem
-  //   let bottomSheetHeight = '50px';
+  const [isTransitioning, setIsTransitioning] = useState(false);
 
   const sheet = useRef<HTMLDivElement>(null);
 
@@ -37,8 +33,9 @@ const BottomSheet = () => {
 
   useEffect(() => {
     const handleTouchStart = (e: TouchEvent) => {
+      setIsTransitioning(false);
       const { touchStart } = metrics.current;
-      touchStart.sheetY = sheet.current?.getBoundingClientRect().y;
+      touchStart.sheetY = sheet.current ? sheet.current.getBoundingClientRect().y : 0;
       touchStart.touchY = e.touches[0].clientY;
     };
 
@@ -50,54 +47,28 @@ const BottomSheet = () => {
         touchMove.prevTouchY = touchStart.touchY;
       }
 
-      console.log(`touchMove.prevTouchY: ${touchMove.prevTouchY}`);
-      console.log(`currentTouch.clientY: ${currentTouch.clientY}`);
-
       if (currentTouch.clientY >= 420) {
         touchMove.movingDirection = 'down';
-        // setBottomSheetHeight(`${window.innerHeight - currentTouch.clientY}px`);
         const height = window.innerHeight - currentTouch.clientY;
         setBottomSheetHeight(`${Math.floor(height)}px`);
-        // setIsAnimating(true);
       }
 
       if (currentTouch.clientY > 210 && currentTouch.clientY < 420) {
         touchMove.movingDirection = 'center';
-        // setBottomSheetHeight(`${window.innerHeight - currentTouch.clientY}px`);
         const height = window.innerHeight - currentTouch.clientY;
         setBottomSheetHeight(`${Math.floor(height)}px`);
-        // setIsAnimating(true);
       }
 
       if (currentTouch.clientY <= 210) {
         touchMove.movingDirection = 'up';
         const height = window.innerHeight - currentTouch.clientY;
         setBottomSheetHeight(`${Math.floor(height)}px`);
-        // setIsAnimating(true);
-        // setBottomSheetHeight(`${window.innerHeight - currentTouch.clientY}px`);
       }
-
-      //   const touchOffset = currentTouch.clientY - touchStart.touchY;
-      //   let nextSheetY = touchStart.sheetY + touchOffset;
-
-      //   if (nextSheetY <= MIN_Y) {
-      //     nextSheetY = MIN_Y;
-      //   }
-
-      //   if (nextSheetY >= MAX_Y) {
-      //     nextSheetY = MAX_Y;
-      //   }
-
-      //   sheet.current?.style.setProperty('transform', `translateY(${nextSheetY - MAX_Y}px)`);
     };
 
-    const handleTouchEnd = (e: TouchEvent) => {
+    const handleTouchEnd = () => {
+      setIsTransitioning(true);
       const { touchMove } = metrics.current;
-
-      // Snap Animation
-      //   const currentSheetY = sheet.current?.getBoudingClientRect().y;
-
-      console.log(sheet.current?.style.height);
 
       if (touchMove.movingDirection === 'down') {
         setBottomSheetHeight(`${window.innerHeight - 600}px`);
@@ -111,7 +82,7 @@ const BottomSheet = () => {
         setBottomSheetHeight(`${window.innerHeight - 50}px`);
       }
 
-      // metrics 초기화.
+      // metrics 초기화
       metrics.current = {
         touchStart: {
           sheetY: 0,
@@ -129,14 +100,9 @@ const BottomSheet = () => {
     sheet.current?.addEventListener('touchend', handleTouchEnd);
   }, []);
 
-  useEffect(() => {
-    console.log(`Updated bottomSheetHeight: ${bottomSheetHeight}`);
-  }, [bottomSheetHeight]);
-
-  // style={{ height: bottomSheetHeight }}
   return (
     <div
-      className={wrapper}
+      className={`${wrapper} ${isTransitioning ? withTransition : noTransition}`}
       style={{ height: bottomSheetHeight }}
       ref={sheet}>
       <BottomSheetHeader />

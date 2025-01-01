@@ -11,6 +11,13 @@ export const wrapper = style({
   borderTopLeftRadius: '8px',
   borderTopRightRadius: '8px',
   boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.6)',
-  transition: 'height 0.3s ease',
   backgroundColor: '#fff',
 });
+
+export const withTransition = style({
+    transition: 'height 0.3s ease-in-out',
+  });
+  
+  export const noTransition = style({
+    transition: 'none',
+  });
