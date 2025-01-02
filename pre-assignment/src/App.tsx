@@ -1,3 +1,5 @@
+import './styles';
+
 function App() {
   return <>hello</>;
 }
