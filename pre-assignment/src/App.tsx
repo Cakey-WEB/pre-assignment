@@ -1,7 +1,8 @@
 import './styles';
+import Search from './pages/search/Search';
 
 function App() {
-  return <>hello</>;
+  return <Search />;
 }
 
 export default App;
