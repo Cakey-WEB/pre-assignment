@@ -8,16 +8,17 @@ export const wrapper = style({
   bottom: 0,
   left: 0,
   right: 0,
-  borderTopLeftRadius: '8px',
-  borderTopRightRadius: '8px',
+  borderTopLeftRadius: '20px',
+  borderTopRightRadius: '20px',
   boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.6)',
   backgroundColor: '#fff',
+  minHeight: '523px',
 });
 
 export const withTransition = style({
-    transition: 'height 0.3s ease-in-out',
-  });
-  
-  export const noTransition = style({
-    transition: 'none',
-  });
+  transition: 'top 0.3s ease-in-out',
+});
+
+export const noTransition = style({
+  transition: 'none',
+});
