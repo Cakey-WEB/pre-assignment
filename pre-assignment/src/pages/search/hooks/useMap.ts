@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 declare global {
   interface Window {
@@ -13,6 +13,7 @@ interface Position {
 
 const useMap = (position: Position | null) => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
+  const [map, setMap] = useState<any>(null);
 
   useEffect(() => {
     if (position && window.kakao) {
@@ -33,12 +34,27 @@ const useMap = (position: Position | null) => {
           level: 3,
         };
 
-        new window.kakao.maps.Map(container, options);
+        const initializedMap = new window.kakao.maps.Map(container, options);
+        setMap(initializedMap);
+
+        // 현재 위치 마커 표시
+        new window.kakao.maps.Marker({
+          position: new window.kakao.maps.LatLng(position.lat, position.lng),
+          map: initializedMap,
+        });
       });
     }
   }, [position]);
 
-  return { mapContainerRef };
+  // 지도 중심 변경 함수
+  const changeMapCenter = (newPosition: Position) => {
+    if (map) {
+      const newCenter = new window.kakao.maps.LatLng(newPosition.lat, newPosition.lng);
+      map.setCenter(newCenter);
+    }
+  };
+
+  return { mapContainerRef, changeMapCenter };
 };
 
 export default useMap;

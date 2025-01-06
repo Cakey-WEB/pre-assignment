@@ -6,7 +6,7 @@ export const overlay = style({
   top: 0,
   maxWidth: '37.5rem',
   width: '100%',
-  height: '100dvh',
+  height: 'calc(100dvh - 1.9rem)',
 });
 
 export const container = style({
